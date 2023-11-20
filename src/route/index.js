@@ -138,5 +138,96 @@ router.post('/user-update', function (req, res) {
   })
 })
 
+// ================================================================
+
+class Product {
+  static #list = []
+
+  constructor(name, price, description) {
+    this.name = name
+    this.price = price
+    this.description = description
+  }
+
+  static getList = () => {
+    return this.#list
+  }
+
+  static add = (product) => {
+    this.#list.push(product)
+  }
+
+  static getById = (id) => {
+
+  }
+
+  static updateById = (id, data) => {
+
+  }
+
+  static deleteById = (id) => {
+
+  }
+}
+
+// ================================================================
+
+router.get('/product-create', function (req, res) {
+  // res.render генерує нам HTML сторінку
+
+  const list = Product.getList()
+
+  // ↙️ cюди вводимо назву файлу з сontainer
+  res.render('product-create', {
+    // вказуємо назву папки контейнера, в якій знаходяться наші стилі
+    style: 'product-create',
+  })
+  // ↑↑ сюди вводимо JSON дані
+})
+
+// ================================================================
+
+
+router.post('/product-create', function (req, res) {
+  const { name, price, description } = req.body
+  
+  const product = new Product(name, price, description)
+
+  Product.add(product)
+
+  console.log(Product.getList())
+
+  res.render('alert', {
+    style: 'alert',
+    info: "Успішне виконання дії",
+    description: "Товар успішно був виделанний"
+  })
+})
+
+// ================================================================
+
+router.get('/product-list', function (req, res) {
+  // res.render генерує нам HTML сторінку
+
+  const list = Product.getList()
+
+  console.log(list)
+
+  // ↙️ cюди вводимо назву файлу з сontainer
+  res.render('product-list', {
+    // вказуємо назву папки контейнера, в якій знаходяться наші стилі
+    style: 'product-list',
+    data: {
+      products: {
+        list,
+        isEmpty: list.length === 0,
+      },
+    },
+  })
+  // ↑↑ сюди вводимо JSON дані
+})
+
+// ================================================================
+
 // Підключаємо роутер до бек-енду
 module.exports = router
